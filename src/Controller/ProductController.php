@@ -10,7 +10,7 @@ use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
+use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -24,6 +24,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Validator\Constraints\GreaterThan;
+use Symfony\Component\Validator\Constraints\LessThanOrEqual;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProductController extends AbstractController
 {
@@ -65,12 +68,29 @@ class ProductController extends AbstractController
     /**
      * @Route("/admin/product/{id}/edit", name="product_edit")
      */
-    public function edit($id, ProductRepository $productRepository, Request $request, EntityManagerInterface $em): Response
+    public function edit($id, ProductRepository $productRepository, Request $request, EntityManagerInterface $em, SluggerInterface $slugger, ValidatorInterface $validator): Response
     {
+        $age = 610;
+        $resultat = $validator->validate($age, [
+            new LessThanOrEqual([
+                'value' => 90,
+                'message' => "l'âge doit être inférieur à 90"
+            ]),
+            new GreaterThan([
+                'value' => 0,
+                'message' => "l'âge doit être supérieur à O"
+            ])
+        ]);
+        if ($resultat->count() > 0) {
+            dd("il y a des erreur", $resultat);
+        }
+
+        dd("tout va bien");
         $product = $productRepository->find($id);
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
+            $product->setSlug(strtolower($slugger->slug($product->getName())));
             $em->flush();
 
             return $this->redirectToRoute('product_show', [
