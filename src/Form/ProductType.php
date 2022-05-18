@@ -14,6 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ProductType extends AbstractType
 {
@@ -22,7 +23,9 @@ class ProductType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => 'nom du produit',
-                'attr' => ['class' => 'form-control', 'placeholder' => 'Tapez le nom de produit']
+                'attr' => ['class' => 'form-control', 'placeholder' => 'Tapez le nom de produit'],
+                'required' => false,
+                // 'constraints' => new NotBlank(['message' => "Validation du formulaire : le nom du produit ne peut pas être null !"])
             ])
             ->add('shortDescription', TextareaType::class, [
                 'label' => 'Description du produit',
@@ -31,7 +34,9 @@ class ProductType extends AbstractType
             ->add('price', MoneyType::class, [
                 'label' => 'prix de poduit',
                 'attr' => ['class' => 'form-control', 'placeholder' => 'Tapez le prix en € '],
-                'divisor' => 100
+                'divisor' => 100,
+                'required' => false,
+                // 'constraints' => new NotBlank(['message' => "le prix du produit est obligatoire !"])
             ])
             ->add('mainPicture', UrlType::class, [
                 'label' => 'image du produit',

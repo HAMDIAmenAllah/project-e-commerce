@@ -24,8 +24,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use Symfony\Component\Validator\Constraints\GreaterThan;
-use Symfony\Component\Validator\Constraints\LessThanOrEqual;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProductController extends AbstractController
@@ -70,26 +69,57 @@ class ProductController extends AbstractController
      */
     public function edit($id, ProductRepository $productRepository, Request $request, EntityManagerInterface $em, SluggerInterface $slugger, ValidatorInterface $validator): Response
     {
-        $age = 610;
-        $resultat = $validator->validate($age, [
-            new LessThanOrEqual([
-                'value' => 90,
-                'message' => "l'âge doit être inférieur à 90"
-            ]),
-            new GreaterThan([
-                'value' => 0,
-                'message' => "l'âge doit être supérieur à O"
-            ])
-        ]);
-        if ($resultat->count() > 0) {
+        /* $product = new Product();
+
+        $resultat = $validator->validate($product); */
+        // $client = [
+        //     'nom' => 'HAMDI',
+        //     'prenom' => '',
+        //     'voiture' => [
+        //         'marque' => '',
+        //         'couleur' => 'noir'
+        //     ]
+        // ];
+        // $collection = new Assert\Collection([
+        //     'nom' => new Assert\NotBlank(['message' => 'le nom ne doit pas être vide']),
+        //     'prenom' => new Assert\NotBlank(['message' => 'le prénom ne doit pas être vide']),
+        //     new Assert\Length([
+        //         'min' => 3,
+        //         'minMessage' => 'le prénom doit comporter au minimum 3 lettres'
+        //     ]),
+        //     'voiture' => new Assert\Collection([
+        //         'marque' => new Assert\NotBlank(['message' => 'la marque est obligatoire']),
+        //         'couleur' => new Assert\NotBlank(['message' => 'la couleur den la voiture est obligatoire'])
+        //     ])
+        // ]);
+        // $resultat = $validator->validate([$client, $collection]);
+        // $age = 116;
+        // $resultat = $validator->validate($age, [
+        //     new Assert\LessThanOrEqual([
+        //         'value' => 90,
+        //         'message' => "l'âge doit être inférieur à {{ compared_value }}, mais vous avez donné {{ value }}"
+        //     ]),
+        //     new Assert\GreaterThan([
+        //         'value' => 0,
+        //         'message' => "l'âge doit être supérieur à O"
+        //     ])
+        // ]);
+        /*  if ($resultat->count() > 0) {
             dd("il y a des erreur", $resultat);
         }
 
-        dd("tout va bien");
+        dd("tout va bien"); */
+        // $product = new Product();
+        // $resultat = $validator->validate($product, null, ["Default", "group-price"]);
+        // dd($resultat);
         $product = $productRepository->find($id);
+        // $form = $this->createForm(ProductType::class, $product, [
+        //     "validation_groups" => ["large-name", "group-price"]
+        // ]);
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
+            // dd($form->getData());
             $product->setSlug(strtolower($slugger->slug($product->getName())));
             $em->flush();
 
@@ -117,7 +147,7 @@ class ProductController extends AbstractController
         //     ->setAction('/toto');
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             // $product = $form->getData();
             $product->setSlug(strtolower($slugger->slug($product->getName())));
             $em->persist($product);
