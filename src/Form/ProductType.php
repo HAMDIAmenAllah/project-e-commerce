@@ -40,7 +40,8 @@ class ProductType extends AbstractType
             ])
             ->add('mainPicture', UrlType::class, [
                 'label' => 'image du produit',
-                'attr' => ['placeholder' => 'Tapez une URL d\'image']
+                'attr' => ['placeholder' => 'Tapez une URL d\'image'],
+                'required' => false
             ])
             ->add('category', EntityType::class, [
                 'label' => 'category',
