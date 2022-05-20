@@ -15,7 +15,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class CategoryController extends AbstractController
 {
-/*     protected $categoryRepository;
+    /*     protected $categoryRepository;
     public function __construct($categoryRepository)
     {
         $this->categoryRepository = $categoryRepository;
@@ -28,6 +28,7 @@ class CategoryController extends AbstractController
             'categories' => $categories,
         ]);
     } */
+    
     /**
      * @Route("/category", name="app_category")
      */
