@@ -8,14 +8,17 @@ use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Faker\Factory;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class AppFixtures extends Fixture
 {
     protected $slugger;
-    public function __construct(SluggerInterface $slugger)
+    protected $encoder;
+    public function __construct(SluggerInterface $slugger, UserPasswordHasherInterface $encoder)
     {
         $this->slugger = $slugger;
+        $this->encoder = $encoder;
     }
     public function load(ObjectManager $manager): void
     {
@@ -35,17 +38,19 @@ class AppFixtures extends Fixture
         $faker->addProvider(new \Bluemmb\Faker\PicsumPhotosProvider($faker));
 
         $admin = new User();
+        $hash = $this->encoder->hashPassword($admin, "password");
         $admin->setEmail("admin@gmail.com")
             ->setFullName("Admin")
-            ->setPassword("password")
+            ->setPassword($hash)
             ->setRoles(['ROLE_ADMIN']);
         $manager->persist($admin);
 
         for ($u = 0; $u < 5; $u++) {
             $user = new User();
+            $hash = $this->encoder->hashPassword($user, "password");
             $user->setEmail("user$u@gmail.Com")
                 ->setFullName($faker->name)
-                ->setPassword("password");
+                ->setPassword($hash);
             $manager->persist($user);
         }
 
