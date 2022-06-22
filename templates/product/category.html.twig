@@ -13,21 +13,13 @@
 		<li class="breadcrumb-item">
 			{{category.name}}
 		</li>
+		
 	</ol>
 	<h1>Catégorie :{{category.name}}</h1>
 	<div class="row">
 		{% for product in category.products %}
 			<div class="col-3">
-				<div class="card">
-					<img src="{{product.mainPicture}}" alt="Image du produit" class="img-fluid">
-					<div class="card-body">
-						<h4 class="card-title">{{product.name}}({{product.price / 100 }}&euro;)</h4>
-						<span class="badge bg-primary">{{ product.category.name }}</span>
-						<p class="card-text">{{product.shortDescription}}</p>
-						<a href="{{path ('product_show' , {'category_slug': product.category.slug, 'slug': product.slug}) }}" class="btn btn-primary btn-sm">Détails</a>
-						<a href="#" class="btn btn-success btn-sm">Ajouter</a>
-					</div>
-				</div>
+				{% include "product/_product_card.html.twig" with {'p' : product} %}
 			</div>
 		{% endfor %}
 	</div>
