@@ -38,18 +38,17 @@ class ProductController extends AbstractController
         // if (!$category) {
         //     throw new NotFoundHttpException("La catégorie demandée n'existe pas!");
         // }
-        /*  if (!$category) {
+        if (!$category) {
             throw $this->createNotFoundException("La catégorie demandée n'existe pas!");
-        } */
+        }
         return $this->render('product/category.html.twig', [
             'category' => $category
         ]);
     }
 
     /**
-     * @Route("/{category_slug}/{slug}", name="product_show")
+     * @Route("/{category_slug}/{slug}", name="product_show", priority=-1)
      */
-
     // /{slug}
     public function show($slug, ProductRepository $productRepository): Response
     {
@@ -57,9 +56,9 @@ class ProductController extends AbstractController
         // ['slug'=>"slug-de-teste"]));
         $product = $productRepository->findOneBy(['slug' => $slug]);
 
-        /*   if (!$product) {
+        if (!$product) {
             throw $this->createNotFoundException("le produit demandé n'existe pas!");
-        } */
+        }
 
         return $this->render('product/show.html.twig', [
             'product' => $product,

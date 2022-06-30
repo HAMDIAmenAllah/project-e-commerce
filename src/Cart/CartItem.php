@@ -17,7 +17,6 @@ class CarItem
 
     public function getTotal(): int
     {
-
         return $this->product->getPrice() * $this->qty;
     }
 }
