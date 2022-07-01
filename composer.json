@@ -15,6 +15,7 @@
         "doctrine/orm": "^2.12",
         "liorchamla/faker-prices": "^2.0",
         "mbezhanov/faker-provider-collection": "^2.0",
+        "stripe/stripe-php": "^8.9",
         "symfony/apache-pack": "^1.0",
         "symfony/console": "5.4.*",
         "symfony/dotenv": "5.4.*",

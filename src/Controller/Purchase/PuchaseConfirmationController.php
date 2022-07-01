@@ -6,24 +6,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Cart\CartService;
 use App\Entity\Purchase;
-use App\Entity\PurchaseItem;
 use App\Form\CartConfirmationType;
-use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Purchase\PurchasePersister;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\Security;
 
 class PuchaseConfirmationController extends AbstractController
 {
     protected $em;
     protected $cartService;
-    public function __construct(Security $security, CartService $cartService, EntityManagerInterface $em)
+    protected $persister;
+    public function __construct(CartService $cartService, PurchasePersister $persister)
     {
-
         $this->cartService = $cartService;
-        $this->em = $em;
+        $this->persister = $persister;
     }
     /**
      * @Route("/purchase/confirm", name="purchase_confirm")
@@ -66,34 +63,13 @@ class PuchaseConfirmationController extends AbstractController
          * @var Purchase
          */
         $purchase = $form->getData();
+        // La suite des étapes sont dans la classe PurchasePersister d'où l'appel à cette ligne "$this->persister->storePurchase($purchase);"
+        $this->persister->storePurchase($purchase);
+        // supprimer le panier après le passage de ma session
+        /* $this->cartService->empty();
 
-        // 6. Lier la purchase avec l'utilisateur actuellement connecté (sécurity)
+        $this->addFlash('success', 'La commande a été enregistrée'); */
 
-        $purchase->setUser($user)
-            ->setPurchasedAt(new DateTime())
-            ->setTotal($this->cartService->getTotal());
-        $this->em->persist($purchase);
-        // 7. Lier la purchase avec les produits qui sont dans le panier (cartservice)
-        foreach ($this->cartService->getDetailedCartItems() as $cartItems) {
-            $purchaseItem = new PurchaseItem;
-            $purchaseItem->setPurchase($purchase)
-                ->setProduct($cartItems->product)
-                ->setProductName($cartItems->product->getName())
-                ->setQuantity($cartItems->qty)
-                ->setTotal($cartItems->getTotal())
-                ->setProductPrice($cartItems->product->getPrice());
-
-
-            $this->em->persist($purchaseItem);
-        }
-        // 8. enregistrer la commande (EntityMAnagerInterface)
-
-        $this->em->flush();
-
-        $this->cartService->empty();
-
-        $this->addFlash('success', 'La commande a été enregistrée');
-
-        return $this->redirectToRoute('purchases_index');
+        return $this->redirectToRoute('purchase_payement_form', ['id' => $purchase->getId()]);
     }
 }
