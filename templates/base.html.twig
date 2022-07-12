@@ -12,9 +12,7 @@
 			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 		{% endblock %}
 
-		{% block javascripts %}
-			{#{{ encore_entry_script_tags('app') }}#}
-		{% endblock %}
+
 	</head>
 	<body>
 		{% include "shared/_navbar.html.twig" %}
@@ -22,11 +20,14 @@
 			{% for rubrique, messages in app.flashes %}
 				<div class="alert alert-{{rubrique}}">
 					{% for message in messages %}
-						<p>{{message}}</p>
+						<p class="text-center mb-0">{{message}}</p>
 					{% endfor %}
 				</div>
 			{% endfor %}
 			{% block body %}{% endblock %}
+			{% block javascripts %}
+				{#{{ encore_entry_script_tags('app') }}#}
+			{% endblock %}
 		</div>
 	</body>
 </html>

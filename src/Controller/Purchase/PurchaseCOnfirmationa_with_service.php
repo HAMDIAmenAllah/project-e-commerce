@@ -70,7 +70,7 @@ class PuchaseConfirmationController_with_service extends AbstractController
         }
 
 
-        // 5. Céer la purchase
+        // 5. Créer la purchase
         /**
          * @var Purchase
          */

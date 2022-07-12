@@ -3,7 +3,9 @@
 {% block title %}
 	Payez votre commande
 {% endblock %}
-{% block stylesheets %}{% endblock %}
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
 {% block body %}
 	<h1>Payer votre commande aves Stripe</h1>
 
@@ -11,7 +13,7 @@
 		<div
 			id="payment-element"><!--Stripe.js injects the Payment Element-->
 		</div>
-		<button id="submit" class="btn btn-success">
+		<button id="submit" class="btn btn-success mt-2">
 			<div class="spinner hidden" id="spinner"></div>
 			<span id="button-text">Payer avec Stripe !</span>
 		</button>
@@ -24,53 +26,9 @@
 	<script src="https://js.stripe.com/v3/"></script>
 	<script>
 		const clientSecret = '{{ clientSecret }}';
-const stripe = Stripe("pk_test_51LGKkFCm4wUOY6JavhugzwVDmV5BgBpiqUjqO9Ol99rH3ceMGyRvLwnQKIFvE6HifgpzZUMnQlcJky4PodnjEV2V00Aq3F9lT6");
+		const stripePublicKey = ' {{ stripePublicKey }}';
+		const redirectAfterSuccessUrl = "{{ url('purchase_payment_success', {'id': purchase.id}) }}"
 
-function initialize() {
-document.querySelector("#payment-form").addEventListener("submit", handleSubmit);
-
-const elements = stripe.elements({clientSecret});
-const paymentElement = elements.create("payment");
-
-paymentElement.mount("#payment-element");
-}
-
-async function handleSubmit(e) {
-e.preventDefault();
-const {error} = await stripe.confirmPayment({
-elements,
-confirmParams: {
-return_url: "{{ url('cart_show') }}"
-}
-});
-}
-
-async function checkStatus() {
-const clientSecret = new URLSearchParams(window.location.search).get("payment_intent_client_secret");
-
-if (! clientSecret) {
-return;
-}
-
-const {paymentIntent} = await stripe.retrievePaymentIntent(clientSecret);
-
-switch (paymentIntent.status) {
-case "succeeded":
-console.log("Payment succeeded!");
-break;
-case "processing":
-console.log("Your payment is processing.");
-break;
-case "requires_payment_method":
-console.log("Your payment was not successful, please try again.");
-break;
-default:
-console.log("Something went wrong.");
-break;
-}
-}
-
-initialize();
-checkStatus();
 	</script>
+	<script src="/assets/js/payment.js"></script>
 {% endblock %}
