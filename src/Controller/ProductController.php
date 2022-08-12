@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\Product;
+use App\Event\ProductMailEvent;
 use App\Form\ProductType;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
@@ -11,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\MakerBundle\Validator;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -49,9 +51,9 @@ class ProductController extends AbstractController
     /**
      * @Route("/{category_slug}/{slug}", name="product_show", priority=-1)
      */
-    // /{slug}
-    public function show($slug, ProductRepository $productRepository): Response
+    public function show($slug, $prenom, $category_slug, ProductRepository $productRepository, Request $request, EventDispatcherInterface $dispatcher): Response
     {
+        // dd($prenom);
         // dd($urlGenerator->generate('product_category',
         // ['slug'=>"slug-de-teste"]));
         $product = $productRepository->findOneBy(['slug' => $slug]);
@@ -60,6 +62,8 @@ class ProductController extends AbstractController
             throw $this->createNotFoundException("le produit demandé n'existe pas!");
         }
 
+        $productEvent = new ProductMailEvent($product);
+        $dispatcher->dispatch($productEvent, 'product.view');
         return $this->render('product/show.html.twig', [
             'product' => $product,
         ]);
