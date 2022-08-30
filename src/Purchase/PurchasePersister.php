@@ -25,9 +25,10 @@ class PurchasePersister
     {
         // 6. Lier la purchase avec l'utilisateur actuellement connecté (sécurity)
 
-        $purchase->setUser($this->security->getUser())
+        $purchase->setUser($this->security->getUser());
+            /* Ci desous remplacer par l'evennement call-back qui est dans l'entité Purchase :  public function prePersist() et public function preFlush()
             ->setPurchasedAt(new DateTime())
-            ->setTotal($this->cartService->getTotal());
+            ->setTotal($this->cartService->getTotal()); */
         $this->em->persist($purchase);
         // 7. Lier la purchase avec les produits qui sont dans le panier (cartservice)
         

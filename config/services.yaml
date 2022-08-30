@@ -24,6 +24,7 @@ services:
             $secretKey: "%env(STRIPE_SECRET_KEY)%"
             $publicKey: "%env(STRIPE_PUBLIC_KEY)%"
 
+    # Branchement du listener au dispatcher symfony avec la config yaml :
     # App\EventDispatcher\PrenomListener:
     #     tags:
     #         [
@@ -45,3 +46,27 @@ services:
     #         ]
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # Branchement du listener au dispatcher doctrine avec la config yaml général: pour la doctrine listener
+    # App\Doctrine\Listener\ProductSlugListener:
+    #     tags: [{ name: "doctrine.event_listener", event: prePersist }]
+
+    # Branchement du listener au dispatcher doctrine avec la config yaml spécifique:
+    App\Doctrine\Listener\ProductSlugListener:
+        tags:
+            [
+                {
+                    name: "doctrine.orm.entity_listener",
+                    event: prePersist,
+                    entity: App\Entity\Product,
+                },
+            ]
+    App\Doctrine\Listener\CategorySlugListener:
+        tags:
+            [
+                {
+                    name: "doctrine.orm.entity_listener",
+                    event: prePersist,
+                    entity: App\Entity\Category,
+                },
+            ]
