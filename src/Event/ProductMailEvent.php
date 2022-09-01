@@ -8,7 +8,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 class ProductMailEvent extends Event
 {
     protected $product;
-    
+
     public function __construct(Product $product)
     {
         $this->product = $product;
