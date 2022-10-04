@@ -56,7 +56,7 @@ class PuchaseConfirmationController_with_service extends AbstractController
 
         $user = $this->security->getUser();
         if (!$user) {
-            throw new AccessDeniedException("Vous devez être connecté pour confirmer uen commande");
+            throw new AccessDeniedException("Vous devez être connecté pour confirmer une commande");
         }
 
         // 4. Si il n'y a pas de produits dans mon panier : dégager (cartservice)

@@ -17,7 +17,7 @@
 		</li>
 		<li class="breadcrumb-item active">{{product.name}}</li>
 	</ol>
-	<h1>{{product.name}}({{product.price /100 }}&euro;)</h1>
+	<h1>{{product.name}} ({{product.price|amount}})</h1>
 	<div class="row">
 		<div class="col-4">
 			<img src="{{product.mainPicture}}" class="img-fluid" alt="image de {{product.name}}">

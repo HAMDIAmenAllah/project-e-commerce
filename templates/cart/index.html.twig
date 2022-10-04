@@ -23,7 +23,7 @@
 							{{ item.product.name }}
 						</td>
 						<td>
-							{{ item.product.price }}
+							{{ item.product.price |amount}}
 						</td>
 
 						<td>
@@ -36,7 +36,7 @@
 							</a>
 						</td>
 						<td>
-							{{ item.total }}
+							{{ item.total |amount}}
 						</td>
 						<td>
 							<a href="{{ path('cart_delete', {'id': item.product.id}) }}" class="btn btn-sm btn-danger">
@@ -49,7 +49,7 @@
 			<tfoot>
 				<tr>
 					<td colspan="3">Total :</td>
-					<td colspan="2">{{ total }}</td>
+					<td colspan="2">{{ total |amount}}</td>
 				</tr>
 			</tfoot>
 		</table>

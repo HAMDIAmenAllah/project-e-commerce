@@ -28,7 +28,7 @@
 					<a href="{{ path('cart_show') }}" class="nav-link">
 						<i class="fas fa-shopping-cart"></i>
 						Panier
-						{{ cartService.getTotal }}
+						({{ cartService.getTotal |amount}})
 					</a>
 				</li>
 				{% if app.user %}

@@ -15,7 +15,7 @@ class HomeController extends AbstractController
      */
     public function index(ProductRepository $productRepository): Response
     {
-
+        dump($productRepository->findBy([], [], 3));
         $product = $productRepository->findBy([], [], 3);
 
         // $product = new Product();
